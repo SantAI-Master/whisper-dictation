@@ -1,6 +1,7 @@
 # src/dictation.py
 """Core dictation service orchestrating all components."""
 import threading
+import winsound
 from typing import Callable, Optional
 from src.audio import AudioRecorder
 from src.transcribe import WhisperTranscriber
@@ -35,6 +36,8 @@ class DictationService:
     def _on_hotkey_press(self):
         """Called when hotkey is pressed - start recording."""
         self._on_status_change("recording")
+        # Play system asterisk sound asynchronously (instant, non-blocking)
+        winsound.PlaySound("SystemAsterisk", winsound.SND_ALIAS | winsound.SND_ASYNC)
         self._recorder.start()
 
     def _on_hotkey_release(self):

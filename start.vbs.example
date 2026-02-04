@@ -1,0 +1,20 @@
+' Whisper Dictation - Silent Launcher for Windows
+' ================================================
+' This script launches the app without showing a console window.
+'
+' SETUP INSTRUCTIONS:
+' 1. Copy this file and rename it to "start.vbs"
+' 2. Edit the path below to match your installation directory
+' 3. Double-click start.vbs to run the app silently
+'
+' OPTIONAL: Add to Windows Startup
+' - Press Win+R, type "shell:startup", press Enter
+' - Create a shortcut to your start.vbs file in that folder
+
+Set WshShell = CreateObject("WScript.Shell")
+
+' IMPORTANT: Change this path to your whisper-dictation folder location
+WshShell.CurrentDirectory = "C:\path\to\whisper-dictation"
+
+' Launch the app (0 = hidden window, False = don't wait)
+WshShell.Run "cmd /c venv\Scripts\activate && python -m src.main", 0, False
