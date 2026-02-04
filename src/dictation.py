@@ -35,10 +35,11 @@ class DictationService:
 
     def _on_hotkey_press(self):
         """Called when hotkey is pressed - start recording."""
+        # Start recording FIRST so audio capture is active before user hears the beep
+        self._recorder.start()
         self._on_status_change("recording")
         # Play system asterisk sound asynchronously (instant, non-blocking)
         winsound.PlaySound("SystemAsterisk", winsound.SND_ALIAS | winsound.SND_ASYNC)
-        self._recorder.start()
 
     def _on_hotkey_release(self):
         """Called when hotkey is released - stop, transcribe, format, type."""

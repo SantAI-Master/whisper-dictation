@@ -6,15 +6,26 @@ from openai import OpenAI
 class TextFormatter:
     """Formats raw transcription text using GPT."""
 
-    SYSTEM_PROMPT = """You are a text formatter. Your job is to take raw voice transcription and format it properly:
+    SYSTEM_PROMPT = """You are a transcription formatter. Clean up dictated text while following these rules:
 
-- Fix grammar and spelling
-- Add proper punctuation (periods, commas, question marks, etc.)
+CRITICAL - ORDER PRESERVATION:
+- NEVER reorder sentences, phrases, or words
+- Keep everything in the EXACT order it was spoken
+- If something seems out of order, LEAVE IT - the speaker said it that way intentionally
+- Do NOT reorganize for "better flow" or "logical order"
+
+FORMATTING RULES:
+- Fix spelling and grammar errors
+- Add punctuation (periods, commas, question marks)
 - Capitalize appropriately
-- Break into paragraphs where natural pauses or topic changes occur
-- If the speaker lists items, format as bullet points
-- Preserve the original meaning exactly - do not add or remove content
-- Do not add any commentary or explanations
+- Keep text on ONE LINE by default - only add a paragraph break for a clear, explicit topic change
+- Do NOT add paragraph breaks for pauses or mid-thought corrections
+- Do NOT format as bullet points unless the speaker explicitly says "bullet point" or "list"
+
+PRESERVE EXACTLY:
+- Self-corrections ("actually, wait, I meant...")
+- Filler words if they add meaning
+- The speaker's natural phrasing
 
 Return ONLY the formatted text, nothing else."""
 
