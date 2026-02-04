@@ -57,6 +57,55 @@ h1 {
     text-transform: capitalize;
 }
 
+.mode-toggle {
+    background: #16213e;
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.mode-label {
+    display: block;
+    color: #888;
+    font-size: 0.85rem;
+    margin-bottom: 0.75rem;
+}
+
+.toggle-container {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.toggle-btn {
+    background: #0f3460;
+    border: 2px solid #0f3460;
+    color: #888;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.toggle-btn:hover {
+    background: #1a4a7a;
+    border-color: #1a4a7a;
+}
+
+.toggle-btn.active {
+    background: #e94560;
+    border-color: #e94560;
+    color: #fff;
+}
+
+.mode-hint {
+    color: #666;
+    font-size: 0.75rem;
+    margin-top: 0.75rem;
+}
+
 .instructions {
     text-align: center;
     margin-bottom: 2rem;

@@ -17,12 +17,13 @@ class DictationService:
         self,
         api_key: str,
         hotkey: str = "ctrl_a",
+        format_mode: str = "single-line",
         on_status_change: Optional[Callable[[str], None]] = None,
         on_transcription: Optional[Callable[[str, str], None]] = None,
     ):
         self._recorder = AudioRecorder()
         self._transcriber = WhisperTranscriber(api_key=api_key)
-        self._formatter = TextFormatter(api_key=api_key)
+        self._formatter = TextFormatter(api_key=api_key, mode=format_mode)
         self._typer = KeyboardTyper()
         self._on_status_change = on_status_change or (lambda s: None)
         self._on_transcription = on_transcription or (lambda raw, fmt: None)
@@ -79,3 +80,11 @@ class DictationService:
     def stop(self):
         """Stop the dictation service."""
         self._hotkey_listener.stop()
+
+    def set_format_mode(self, mode: str):
+        """Change the formatting mode at runtime."""
+        self._formatter.set_mode(mode)
+
+    def get_format_mode(self) -> str:
+        """Get the current formatting mode."""
+        return self._formatter.get_mode()

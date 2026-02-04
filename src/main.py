@@ -18,6 +18,7 @@ def main():
         sys.exit(1)
 
     hotkey = os.getenv("HOTKEY", "ctrl_a")
+    format_mode = os.getenv("FORMAT_MODE", "single-line")  # "single-line" or "document"
 
     tray = TrayIcon()
 
@@ -31,6 +32,7 @@ def main():
     dictation = DictationService(
         api_key=api_key,
         hotkey=hotkey,
+        format_mode=format_mode,
         on_status_change=on_status_change,
         on_transcription=on_transcription,
     )
@@ -41,8 +43,15 @@ def main():
 
     tray._on_quit = on_quit
 
+    # Wire up mode change callbacks
+    server.set_mode_callback(
+        on_change=dictation.set_format_mode,
+        get_mode=dictation.get_format_mode,
+    )
+
     print(f"Starting Whisper Dictation...")
     print(f"Hotkey: {hotkey}")
+    print(f"Format mode: {format_mode}")
     print(f"Dashboard: http://localhost:8765")
     print(f"Hold {hotkey} to record, release to transcribe.")
 
