@@ -1,6 +1,11 @@
 # src/formatter.py
 """Text formatting using GPT for grammar, punctuation, and structure."""
+import logging
 from openai import OpenAI
+
+# Set up logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 
 class TextFormatter:
@@ -72,6 +77,10 @@ Return ONLY the formatted text, nothing else."""
         # Select prompt based on mode
         prompt = self.SINGLE_LINE_PROMPT if self._mode == "single-line" else self.DOCUMENT_PROMPT
 
+        logger.debug(f"=== FORMATTER DEBUG ===")
+        logger.debug(f"Mode: {self._mode}")
+        logger.debug(f"Raw input: {repr(raw_text)}")
+
         response = self._client.chat.completions.create(
             model="gpt-4o-mini",  # Fast and cheap, good for formatting
             messages=[
@@ -82,4 +91,19 @@ Return ONLY the formatted text, nothing else."""
             max_tokens=2000,
         )
 
-        return response.choices[0].message.content.strip()
+        result = response.choices[0].message.content.strip()
+        logger.debug(f"GPT returned: {repr(result)}")
+        logger.debug(f"Contains newlines: {'\\n' in result or '\\r' in result}")
+
+        # CRITICAL FAILSAFE: In single-line mode, programmatically strip ALL newlines
+        # GPT sometimes ignores prompt instructions, so we enforce this in code
+        if self._mode == "single-line":
+            # Replace all types of newlines with a space
+            result = result.replace('\r\n', ' ').replace('\n', ' ').replace('\r', ' ')
+            # Clean up any double spaces that might result
+            while '  ' in result:
+                result = result.replace('  ', ' ')
+            logger.debug(f"After newline strip: {repr(result)}")
+
+        logger.debug(f"=== END DEBUG ===")
+        return result
