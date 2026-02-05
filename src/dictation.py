@@ -59,13 +59,16 @@ class DictationService:
                 if not raw_text:
                     return
 
-                # Step 2: Format with GPT (grammar, punctuation, paragraphs)
+                # Step 2: Format with GPT and type with streaming
+                # Text appears as GPT generates it for faster perceived response
                 self._on_status_change("formatting")
-                formatted_text = self._formatter.format(raw_text)
+                formatted_text = self._formatter.format(
+                    raw_text,
+                    on_token=lambda token: self._typer.type_text(token)
+                )
 
-                # Step 3: Type the formatted result
+                # Notify transcription complete (for history)
                 if formatted_text:
-                    self._typer.type_text(formatted_text)
                     self._on_transcription(raw_text, formatted_text)
             finally:
                 self._on_status_change("idle")
